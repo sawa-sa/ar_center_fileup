@@ -1,22 +1,32 @@
 
 // テキスト形式のCSVデータをオブジェクト形式に変換する関数
 function parseCSV(csvText) {
-  const rows = csvText.split('\n');
-  const headers = rows.shift().split(',').map(header => header.trim()); // ヘッダー行を取得
-
+  const rows = csvText.split('\n'); // 行ごとに分割
   const data = [];
-  rows.forEach(row => {
+
+  // ヘッダー行を除く（最初の行をスキップ）
+  rows.slice(1).forEach(row => {
     const cols = row.split(',');
-    if (cols.length === headers.length) {
-      const obj = {};
-      headers.forEach((header, index) => {
-        obj[header] = parseFloat(cols[index].trim());
-      });
-      data.push(obj);
+
+    // 少なくとも3列あり、数値が含まれている場合に処理
+    if (cols.length >= 3) {
+      const x = parseFloat(cols[0].trim());
+      const y = parseFloat(cols[1].trim());
+      const z = parseFloat(cols[2].trim());
+
+      // x, y, z のいずれかが無効な値であればスキップ
+      if (!isNaN(x) && !isNaN(y) && !isNaN(z)) {
+        data.push({ x, y, z });
+      }
     }
   });
+
   return data;
 }
+
+
+
+
 
 // データを0〜1の範囲に正規化する関数
 function normalizeData(data) {
