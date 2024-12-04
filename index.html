@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>AR Scatterplot</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/3.1.0/three.js/build/ar.js"></script>
+  <script src="./CSVManager.js" type="module"></script>
+</head>
+
+<body>
+  <input type="file" id="csvFileInput" accept=".csv" style="display: block; margin: 20px;" />
+  <p>CSVファイルを選択して点群を描画してください。</p>
+  <script type="module">
+    import { parseCSV, normalizeData, calculateMinMax } from './CSVManager.js';
+
+    document.getElementById('csvFileInput').addEventListener('change', handleFileSelect);
+
+    async function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) {
+        alert('CSVファイルを選択してください。');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const data = parseCSV(reader.result);
+        if (data.length === 0) {
+          alert('CSVファイルが空か、フォーマットが正しくありません。');
+          return;
+        }
+
+        // CSVデータをlocalStorageに保存
+        localStorage.setItem('csvData', JSON.stringify(data));
+
+        // AR表示用のページに遷移
+        window.location.href = 'ar.html';
+      };
+      reader.readAsText(file);
+    }
+  </script>
+</body>
+
+</html>
