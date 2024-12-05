@@ -25,7 +25,7 @@
 
       let arToolkitSource, arToolkitContext;
 
-      const csvData = JSON.parse(localStorage.getItem('csvData'));
+      const csvData = JSON.parse(sessionStorage.getItem('csvData'));
       if (!csvData) {
         alert('CSVデータが見つかりません。ファイルをアップロードしてもう一度試してください。');
         window.location.href = 'index.html';
