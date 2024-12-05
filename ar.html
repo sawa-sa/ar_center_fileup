@@ -70,6 +70,40 @@
 
         const axisMaterial = new THREE.LineBasicMaterial({ color: 0x888888, transparent: true, opacity: 0.5 });
 
+        // XZ平面を白く追加
+        const vertices = new Float32Array([
+            -0.7, 0, -0.7, // 頂点1
+            -0.7, 0,  0.7, // 頂点2
+            0.7, 0,  0.7, // 頂点3
+            0.7, 0, -0.7  // 頂点4
+        ]);
+
+        // 頂点インデックスで三角形を定義
+        const indices = [
+            0, 1, 2, // 三角形1
+            0, 2, 3  // 三角形2
+        ];
+
+        // バッファジオメトリの作成
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); // 頂点を設定
+        geometry.setIndex(indices); // 頂点の順序を設定
+        geometry.computeVertexNormals(); // 法線を計算
+
+        // マテリアルを作成
+        const material = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        // メッシュを作成
+        const square = new THREE.Mesh(geometry, material);
+
+        // シーンに追加
+        scene.add(square);
+
         const axes = [
           { start: [-0.5, 0, -0.5], end: [0.5, 0, -0.5], label: 'X', minLabel: min.x, maxLabel: max.x, offset: [0.1, 0, 0] },
           { start: [-0.5, 0, -0.5], end: [-0.5, 1, -0.5], label: 'Y', minLabel: min.y, maxLabel: max.y, offset: [0, 0.1, 0] },
@@ -87,7 +121,7 @@
             scene.add(axis);
 
             // ラベル用のマテリアル
-            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000, transparent: true, opacity: 0.8 });
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.8 });
 
             // 軸ラベル (X, Y, Z)
             const labelGeometry = new THREE.TextGeometry(label, { font, size: 0.05, height: 0.01 });
@@ -110,12 +144,13 @@
         });
       }
 
+
       async function createScatterPlot() {
         const normalizedData = normalizeData(csvData);
 
         normalizedData.forEach(point => {
           const geometry = new THREE.SphereGeometry(0.02, 16, 16);
-          const material = new THREE.MeshBasicMaterial({ color: 0x0000ff, transparent: true, opacity: 0.7  });
+          const material = new THREE.MeshBasicMaterial({ color: 0x0000ff , transparent: true, opacity: 0.7 });
           const sphere = new THREE.Mesh(geometry, material);
 
           sphere.position.set(point.x - 0.5, point.y, point.z - 0.5);
