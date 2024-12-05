@@ -32,7 +32,7 @@
         }
 
         // CSVデータをlocalStorageに保存
-        localStorage.setItem('csvData', JSON.stringify(data));
+        sessionStorage.setItem('csvData', JSON.stringify(data));
 
         // AR表示用のページに遷移
         window.location.href = 'ar.html';
