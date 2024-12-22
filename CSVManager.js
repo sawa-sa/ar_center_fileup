@@ -1,4 +1,3 @@
-
 // テキスト形式のCSVデータをオブジェクト形式に変換する関数
 function parseCSV(csvText) {
   const rows = csvText.split('\n'); // 行ごとに分割
@@ -13,19 +12,19 @@ function parseCSV(csvText) {
       const x = parseFloat(cols[0].trim());
       const y = parseFloat(cols[1].trim());
       const z = parseFloat(cols[2].trim());
+      const size = cols.length >= 4 ? parseFloat(cols[3].trim()) : undefined;
+      const colorCode = cols.length >= 5 ? cols[4].trim() : undefined;
+      const color = colorCode && /^0x[0-9A-Fa-f]{6}$/i.test(colorCode) ? parseInt(colorCode, 16) : 0xffff00;
 
       // x, y, z のいずれかが無効な値であればスキップ
       if (!isNaN(x) && !isNaN(y) && !isNaN(z)) {
-        data.push({ x, y, z });
+        data.push({ x, y, z, size, color });
       }
     }
   });
 
   return data;
 }
-
-
-
 
 
 // データを0〜1の範囲に正規化する関数
@@ -36,23 +35,31 @@ function normalizeData(data) {
   return data.map(point => ({
     x: (point.x - minMax.min.x) / (minMax.max.x - minMax.min.x),
     y: (point.y - minMax.min.y) / (minMax.max.y - minMax.min.y),
-    z: (point.z - minMax.min.z) / (minMax.max.z - minMax.min.z)
+    z: (point.z - minMax.min.z) / (minMax.max.z - minMax.min.z),
+    size: point.size !== undefined ? (point.size - minMax.min.size) / (minMax.max.size - minMax.min.size) : undefined,
+    color: point.color
   }));
 }
 
 // データの最小値と最大値を計算する関数
 function calculateMinMax(data) {
-  let min = { x: Infinity, y: Infinity, z: Infinity };
-  let max = { x: -Infinity, y: -Infinity, z: -Infinity };
+  let min = { x: Infinity, y: Infinity, z: Infinity, size: Infinity };
+  let max = { x: -Infinity, y: -Infinity, z: -Infinity, size: -Infinity };
 
   data.forEach(point => {
     min.x = Math.min(min.x, point.x);
     min.y = Math.min(min.y, point.y);
     min.z = Math.min(min.z, point.z);
+    if (point.size !== undefined) {
+      min.size = Math.min(min.size, point.size);
+    }
 
     max.x = Math.max(max.x, point.x);
     max.y = Math.max(max.y, point.y);
     max.z = Math.max(max.z, point.z);
+    if (point.size !== undefined) {
+      max.size = Math.max(max.size, point.size);
+    }
   });
 
   return { min, max };
