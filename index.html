@@ -11,8 +11,24 @@
 <body>
   <input type="file" id="csvFileInput" accept=".csv" style="display: block; margin: 20px;" />
   <p>CSVファイルを選択して点群を描画してください。</p>
+  <label>
+    <input type="checkbox" id="flagCheckbox" style="margin: 10px;" /> 4変数目の受け取り方
+  </label>
+  <p id="flagStatus">1をデフォルトの大きさとし、0より大きい任意の値を入れてください</p>
+
+
   <script type="module">
     import { parseCSV, normalizeData, calculateMinMax } from './CSVManager.js';
+
+    let flag = 0; // 初期フラグ値
+
+    document.getElementById('flagCheckbox').addEventListener('change', (event) => {
+      flag = event.target.checked ? 1 : 0;
+      const statusText = flag === 1
+        ? '正規化して0-1の値として扱います。'
+        : '1をデフォルトの大きさとし、0より大きい任意の値を入れてください';
+      document.getElementById('flagStatus').innerText = statusText;
+    });
 
     document.getElementById('csvFileInput').addEventListener('change', handleFileSelect);
 
@@ -33,6 +49,7 @@
 
         // CSVデータをlocalStorageに保存
         sessionStorage.setItem('csvData', JSON.stringify(data));
+        sessionStorage.setItem('flag', flag); // フラグ状態も保存
 
         // AR表示用のページに遷移
         window.location.href = 'ar.html';

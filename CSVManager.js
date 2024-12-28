@@ -30,15 +30,18 @@ function parseCSV(csvText) {
 // データを0〜1の範囲に正規化する関数
 function normalizeData(data) {
   const minMax = calculateMinMax(data);
+  const flag = sessionStorage.getItem('flag'); // フラグを取得
   // 正規化
   return data.map(point => ({
     x: (minMax.max.x - minMax.min.x === 0) ? 0.5 : (point.x - minMax.min.x) / (minMax.max.x - minMax.min.x),
     y: (minMax.max.y - minMax.min.y === 0) ? 0.5 : (point.y - minMax.min.y) / (minMax.max.y - minMax.min.y),
     z: (minMax.max.z - minMax.min.z === 0) ? 0.5 : (point.z - minMax.min.z) / (minMax.max.z - minMax.min.z),
-    size: point.size !== undefined 
-      ? (minMax.max.size - minMax.min.size === 0) 
-        ? 0.5 
-        : (point.size - minMax.min.size) / (minMax.max.size - minMax.min.size) 
+    size: (point.size !== undefined)
+      ? (flag === 1)
+        ? (minMax.max.size - minMax.min.size === 0) 
+          ? 0.5 
+          : (point.size - minMax.min.size) / (minMax.max.size - minMax.min.size) 
+        : point.size
       : undefined,
     color: point.color
   }));

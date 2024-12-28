@@ -128,8 +128,16 @@
         const normalizedData = normalizeData(csvData);
 
         normalizedData.forEach(point => {
-          const size = point.size !== undefined ? 0.02 + (point.size - 0.5) * 0.02 : 0.02;
-          const geometry = new THREE.SphereGeometry(size, 32, 32);
+
+          const flag = sessionStorage.getItem('flag'); // フラグの値を取得
+          let size;
+          if (flag === '1') { // 正規化する
+            size = point.size !== undefined ? 0.02 + (point.size - 0.5) * 0.02 : 0.02;
+          } else { // 4変数目を指定してもらう
+            size = point.size !== undefined ? 0.02 * point.size : 0.02;
+          }
+
+          const geometry = new THREE.SphereGeometry(size, 64, 64);
           const material = new THREE.MeshStandardMaterial({ color: point.color, transparent: true, opacity: 0.5 });
           const sphere = new THREE.Mesh(geometry, material);
 
