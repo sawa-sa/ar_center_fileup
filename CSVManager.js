@@ -13,6 +13,7 @@ function parseCSV(csvText) {
       const y = parseFloat(cols[1].trim());
       const z = parseFloat(cols[2].trim());
       const size = cols.length >= 4 ? parseFloat(cols[3].trim()) : undefined;
+      console.log(`Parsed size: ${size}`); // デバッグログ
       const colorCode = cols.length >= 5 ? cols[4].trim() : undefined;
       const color = colorCode && /^0x[0-9A-Fa-f]{6}$/i.test(colorCode) ? parseInt(colorCode, 16) : 0xffff00;
 
@@ -37,7 +38,7 @@ function normalizeData(data) {
     y: (minMax.max.y - minMax.min.y === 0) ? 0.5 : (point.y - minMax.min.y) / (minMax.max.y - minMax.min.y),
     z: (minMax.max.z - minMax.min.z === 0) ? 0.5 : (point.z - minMax.min.z) / (minMax.max.z - minMax.min.z),
     size: (point.size !== undefined)
-      ? (flag === 1)
+      ? (flag === '1')
         ? (minMax.max.size - minMax.min.size === 0) 
           ? 0.5 
           : (point.size - minMax.min.size) / (minMax.max.size - minMax.min.size) 
@@ -46,7 +47,6 @@ function normalizeData(data) {
     color: point.color
   }));
 }
-
 
 // データの最小値と最大値を計算する関数
 function calculateMinMax(data) {

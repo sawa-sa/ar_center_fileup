@@ -6,13 +6,17 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/3.1.0/three.js/build/ar.js"></script>
   <script src="./CSVManager.js" type="module"></script>
+  <!--
+  <link rel="stylesheet" href="style.css">
+  -->
+
 </head>
 
 <body>
   <input type="file" id="csvFileInput" accept=".csv" style="display: block; margin: 20px;" />
   <p>CSVファイルを選択して点群を描画してください。</p>
   <label>
-    <input type="checkbox" id="flagCheckbox" style="margin: 10px;" /> 4変数目の受け取り方
+    <input type="checkbox" id="flagCheckbox" style="margin: 10px;" /> 正規化して0-1の値として扱います。
   </label>
   <p id="flagStatus">1をデフォルトの大きさとし、0より大きい任意の値を入れてください</p>
 
@@ -47,7 +51,7 @@
           return;
         }
 
-        // CSVデータをlocalStorageに保存
+        // CSVデータをsessionStorageに保存
         sessionStorage.setItem('csvData', JSON.stringify(data));
         sessionStorage.setItem('flag', flag); // フラグ状態も保存
 
