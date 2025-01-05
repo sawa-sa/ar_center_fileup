@@ -9,7 +9,7 @@
   </head>
   <body>
     <script type="module">
-      import { normalizeData, calculateMinMax } from './CSVManager.js';
+      import { parseCSV, normalizeData, calculateMinMax } from './CSVManager.js';
 
       // レンダラー設定
       const renderer = new THREE.WebGLRenderer({
@@ -38,8 +38,8 @@
 
       let arToolkitSource, arToolkitContext;
 
-      const csvData = JSON.parse(sessionStorage.getItem('csvData'));
-      if (!csvData) {
+      const csvText = sessionStorage.getItem('csvData');
+      if (!csvText) {
         alert('CSVデータが見つかりません。ファイルをアップロードしてもう一度試してください。');
         window.location.href = 'index.html';
       }
@@ -78,8 +78,8 @@
         }
       }
 
-      async function addAxesWithLabels() {
-        const { min, max } = calculateMinMax(csvData);
+      async function addAxesWithLabels(parsedData) {
+        const { min, max } = calculateMinMax(parsedData);
 
         const axisMaterial = new THREE.LineBasicMaterial({ color: 0x888888, transparent: true, opacity: 0.5 });
 
@@ -125,8 +125,8 @@
       }
 
 
-      async function createScatterPlot() {
-        const normalizedData = normalizeData(csvData);
+      async function createScatterPlot(parsedData) {
+        const normalizedData = normalizeData(parsedData);
 
         normalizedData.forEach(point => {
 
@@ -149,8 +149,10 @@
 
       (async function initialize() {
         setupAR();
-        await addAxesWithLabels();
-        await createScatterPlot();
+        if (!csvText) return;
+        const parsedData = parseCSV(csvText);
+        await addAxesWithLabels(parsedData);
+        await createScatterPlot(parsedData);
 
         function animate() {
           if (arToolkitSource.ready) {

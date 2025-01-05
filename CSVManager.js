@@ -13,7 +13,6 @@ function parseCSV(csvText) {
       const y = parseFloat(cols[1].trim());
       const z = parseFloat(cols[2].trim());
       const size = cols.length >= 4 ? parseFloat(cols[3].trim()) : undefined;
-      console.log(`Parsed size: ${size}`); // デバッグログ
       const colorCode = cols.length >= 5 ? cols[4].trim() : undefined;
       const color = colorCode && /^0x[0-9A-Fa-f]{6}$/i.test(colorCode) ? parseInt(colorCode, 16) : 0xffff00;
 
