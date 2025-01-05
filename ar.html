@@ -9,7 +9,7 @@
   </head>
   <body>
     <script type="module">
-      import { parseCSV, normalizeData, calculateMinMax } from './CSVManager.js';
+      import { loadCSVData, parseCSV, normalizeData, calculateMinMax } from './CSVManager.js';
 
       // レンダラー設定
       const renderer = new THREE.WebGLRenderer({
@@ -38,10 +38,21 @@
 
       let arToolkitSource, arToolkitContext;
 
-      const csvText = sessionStorage.getItem('csvData');
-      if (!csvText) {
-        alert('CSVデータが見つかりません。ファイルをアップロードしてもう一度試してください。');
-        window.location.href = 'index.html';
+      const chosenDataset = sessionStorage.getItem('chosenDataset');
+      let csvText;
+
+      if (chosenDataset === 'dataset1') {
+        csvText = await loadCSVData("data/dataset1.csv");
+      } else if (chosenDataset === 'dataset2') {
+        csvText = await loadCSVData("data/dataset2.csv");
+      } else if (chosenDataset === 'dataset3') {
+        csvText = await loadCSVData("data/dataset3.csv");
+      } else {
+        csvText = sessionStorage.getItem('uploadedCSVData');
+        if (!csvText) {
+          alert('CSVデータが見つかりません。ファイルをアップロードしてもう一度試してください。');
+          window.location.href = 'index.html';
+        }
       }
 
       function setupAR() {
@@ -139,7 +150,7 @@
           }
 
           const geometry = new THREE.SphereGeometry(size, 64, 64);
-          const material = new THREE.MeshStandardMaterial({ color: point.color, transparent: true, opacity: 0.5 });
+          const material = new THREE.MeshStandardMaterial({ color: point.color, transparent: true, opacity: 0.7 });
           const sphere = new THREE.Mesh(geometry, material);
 
           sphere.position.set(point.x - 0.5, point.y, point.z - 0.5);

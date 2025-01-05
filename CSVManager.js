@@ -1,6 +1,6 @@
 // テキスト形式のCSVデータをオブジェクト形式に変換する関数
-function parseCSV(csvText) {
-  const rows = csvText.split('\n'); // 行ごとに分割
+function parseCSV(text) {
+  const rows = text.split('\n'); // 行ごとに分割
   const data = [];
 
   // ヘッダー行を除く（最初の行をスキップ）
@@ -24,6 +24,12 @@ function parseCSV(csvText) {
   });
 
   return data;
+}
+
+async function loadCSVData(url) {
+  const response = await fetch(url);
+  const text = await response.text();
+  return text; // パース処理を共通化
 }
 
 
@@ -71,4 +77,4 @@ function calculateMinMax(data) {
   return { min, max };
 }
 
-export {parseCSV, normalizeData, calculateMinMax };
+export {parseCSV, normalizeData, calculateMinMax, loadCSVData };
