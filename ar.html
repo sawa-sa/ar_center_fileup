@@ -47,6 +47,10 @@
         csvText = await loadCSVData("data/dataset2.csv");
       } else if (chosenDataset === 'dataset3') {
         csvText = await loadCSVData("data/dataset3.csv");
+      } else if (chosenDataset === 'dataset4') {
+        csvText = await loadCSVData("data/dataset4.csv");
+      } else if (chosenDataset === 'dataset5') {
+        csvText = await loadCSVData("data/dataset5.csv");
       } else {
         csvText = sessionStorage.getItem('uploadedCSVData');
         if (!csvText) {
